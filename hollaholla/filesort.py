@@ -7,7 +7,7 @@ import re
 import string
 
 cur_dir = os.getcwd()
-shows = ['vikings', 'castle', 'archer']
+shows = ['vikings', 'castle', 'archer', 'silicon']
 
 def show_match(show, showdir):
   for dirpath, dirname, filenames in  os.walk(cur_dir, followlinks = True):
