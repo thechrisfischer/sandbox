@@ -72,10 +72,24 @@ def getHousing(url):
             count = 0
     return json_data
 
+def sql_getHousing(url):
+    data = getHousing(url)
+    print data
+    conn = psycopg2.connect(connection)
+    cursor = conn.cursor()
+    
+    for k,v in data: 
+        query =  "INSERT INTO items (info, city, price) VALUES (%s, %s, %s);"
+        data = (info, city, price)
+    
+        cursor.execute(query, data)
+    
 metros = getMetroURL("in")
 
 for url in metros:
     print url + "\n"
     print getHousing(url)
     print "\n -------- \n"
+    break
+
 
