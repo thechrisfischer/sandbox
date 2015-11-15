@@ -65,9 +65,28 @@ def getMetroStats(url):
 def getHousing():
     page = requests.get('http://www.bestplaces.net/housing/metro/indiana/columbus')
     tree = html.fromstring(page.content)
-    name = tree.xpath('//table[@id="mainContent_dgHousing"]//tr/td/text()')
-    for i in name:
-      i = unidecode.unidecode(i)
-      print i
+    headers = tree.xpath('//table[@id="mainContent_dgHousing"]//tr//td[1]//font/text()')
+    data = tree.xpath('//table[@id="mainContent_dgHousing"]//tr//td[not(@bgcolor="#000000")]/text()')
+    
+    json_data = {}
+    count = 0
+    for i in data:
+        if isinstance(i, unicode):
+            i = unidecode.unidecode(i).strip()
+        else:
+            i.strip()
+        if count == 0:
+            k = i
+            count = count + 1
+        elif count == 1:
+            v1 = i
+            json_data.update({k : v1})
+            count = count + 1
+        elif count == 2:
+            count = 0
+    return json_data
 
-print getHousing()
+
+test = getHousing()
+
+print test
