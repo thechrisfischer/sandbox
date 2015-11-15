@@ -47,23 +47,8 @@ def getMetroStats(url):
     return "Pop : " + rows[0] + " Unemployment : " + rows[2] + " Home Cost : " + rows[6] 
 
 
-
-#statelist = getStates()
-#for i in statelist:
-#    url = getMetroURL(i)
-#    for x in url: 
-#        print getMetroStats(x) + " " + x
-
-
-#print state_rows
-
-#print alaska
-#for i in state_rows:
-#    print i
-
-
-def getHousing():
-    page = requests.get('http://www.bestplaces.net/housing/metro/indiana/columbus')
+def getHousing(url):
+    page = requests.get(url)
     tree = html.fromstring(page.content)
     headers = tree.xpath('//table[@id="mainContent_dgHousing"]//tr//td[1]//font/text()')
     data = tree.xpath('//table[@id="mainContent_dgHousing"]//tr//td[not(@bgcolor="#000000")]/text()')
@@ -87,6 +72,6 @@ def getHousing():
     return json_data
 
 
-test = getHousing()
+output = getHousing('http://www.bestplaces.net/housing/metro/indiana/columbus')
+print output
 
-print test
