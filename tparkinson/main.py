@@ -48,6 +48,7 @@ def getMetroStats(url):
 
 
 def getHousing(url):
+    url = url.replace('/metro/', '/housing/metro/')
     page = requests.get(url)
     tree = html.fromstring(page.content)
     headers = tree.xpath('//table[@id="mainContent_dgHousing"]//tr//td[1]//font/text()')
@@ -71,7 +72,10 @@ def getHousing(url):
             count = 0
     return json_data
 
+metros = getMetroURL("in")
 
-output = getHousing('http://www.bestplaces.net/housing/metro/indiana/columbus')
-print output
+for url in metros:
+    print url + "\n"
+    print getHousing(url)
+    print "\n -------- \n"
 
