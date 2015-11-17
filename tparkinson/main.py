@@ -4,6 +4,7 @@ from lxml import html
 import requests
 import string
 import unidecode
+import csv
 
 page = requests.get('http://www.bestplaces.net/find/state.aspx?state=IL')
 tree = html.fromstring(page.content)
@@ -48,7 +49,6 @@ def getMetroStats(url):
 
 
 def getHousing(url):
-    url = url.replace('/metro/', '/housing/metro/')
     page = requests.get(url)
     tree = html.fromstring(page.content)
     headers = tree.xpath('//table[@id="mainContent_dgHousing"]//tr//td[1]//font/text()')
@@ -72,24 +72,35 @@ def getHousing(url):
             count = 0
     return json_data
 
-def sql_getHousing(url):
-    data = getHousing(url)
-    print data
-    conn = psycopg2.connect(connection)
-    cursor = conn.cursor()
+#def sql_getHousing(url):
+#    data = getHousing(url)
+#    print data
+#    conn = psycopg2.connect(connection)
+#    cursor = conn.cursor()
+#    
+#    for k,v in data: 
+#        query =  "INSERT INTO items (info, city, price) VALUES (%s, %s, %s);"
+#        data = (info, city, price)
+#    
+#        cursor.execute(query, data)
     
-    for k,v in data: 
-        query =  "INSERT INTO items (info, city, price) VALUES (%s, %s, %s);"
-        data = (info, city, price)
-    
-        cursor.execute(query, data)
-    
-metros = getMetroURL("in")
+def write_csv(dict_data):
+    with open('tparkinson.csv', 'wb') as csvfile:
+        fieldnames = dict_data.keys()
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        
+        for k,v in dict_data.items():
+            writer.writerow({k : v})
 
-for url in metros:
-    print url + "\n"
-    print getHousing(url)
-    print "\n -------- \n"
-    break
+ 
+states = ['in', 'il']
 
+for state in states:
+    urls = getMetroURL(state)
+    for url in urls:
+        url = url.replace('/metro/', '/housing/metro/') 
+        housing_stats = getHousing(url)
+        write_csv(housing_stats)
+    
 
