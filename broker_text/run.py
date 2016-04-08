@@ -11,7 +11,8 @@ text = textbelt.textbelt()
 
 #success send
 
-num_array = ['2123210345', '21210356']
+num_array = ['2123210345', '21210356', '2032148848', '4803294635']
 for number in num_array:
-	logging.info(number + " --- " + text.send(number,'I sent this message from python through textbelt.com'))
+    status = text.send(number,'Brokers, reconnect with clients use our app - http://goo.gl/uyp2tI')
+    logging.info(number + " --- " + status)
 
