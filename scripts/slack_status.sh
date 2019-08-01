@@ -2,19 +2,28 @@
 
 function validate_ip {
     local iparray=()
-    for i in "$@"
+    local valid_octet
+    for arg in "$@"
     do
-        if [ $(echo $i | grep -o '\.' | wc -l) -eq 3 ] && [ $(echo $i | tr '.' ' ' | wc -w) -eq 4 ]; then
-            iparray+=($i)
-#                for OCTET in echo $1 | tr '.' ' '; do
-#                        if ! [[ $OCTET =~ ^[0-9]+$ ]]; then
-#                                echo "Parameter '$1' does not look like in IP Address (octet '$OCTET' is not numeric).";
-#                                exit 1;
-#                        elif [[ $OCTET -lt 0 || $OCTET -gt 255 ]]; then
-#                                echo "Parameter '$1' does not look like in IP Address (octet '$OCTET' in not in range 0-255).";
-#                                exit 1;
-#                        fi
-#                done
+        # check if the ip address has is in valid octect format - has 3 "." nad has 4 different character sets
+        if [[ $(echo $arg | grep -o '\.' | wc -l) -eq 3 ]] && [[ $(echo $arg | tr '.' ' ' | wc -w) -eq 4 ]]; then
+            valid_octet="true"
+
+            for octet in $(echo $arg | tr '.' ' '); do
+                if ! [[ $octet =~ ^[0-9]+$ ]]; then
+                    valid_octet="false"
+                fi
+
+                if ! [[ $octet -ge 0 && $octet -le 255 ]]; then
+                    valid_octet="false"
+                fi
+
+            done
+
+            if [[ "$valid_octet" == "true" ]]; then
+                iparray+=("$arg")
+            fi
+
         fi
     done
     local output=${iparray[*]}
@@ -34,10 +43,12 @@ function get_hostname {
     local output
     output=$(hostname)
     echo $output
+
 }
 function post_slack {
     local ip
     ip=$(get_ip)
+    ip="172.kjhfdjk.192.55.2"
     local hostname
     hostname=$(get_hostname)
     local slack_url="https://hooks.slack.com/services/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"
