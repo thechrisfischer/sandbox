@@ -28,11 +28,15 @@ function get_ip {
     echo $output
 }
 
-
+function get_hostname {
+    local output=$(hostname)
+    echo $output
+}
 function post_slack {
     local ip=$(get_ip)
+    local hostname=$(get_hostname)
     local slack_url="https://hooks.slack.com/services/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"
-    local payload="{\"text\":\"$ip\"}"
+    local payload="{\"text\":\"$hostname :: $ip\"}"
     curl -X POST -H "Content-type: application/json" --data "$payload" $slack_url
 }
 
