@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function check_ip {
+function validate_ip {
     local iparray=()
     for i in "$@"
     do
@@ -24,7 +24,7 @@ function check_ip {
 
 function get_ip {
     local ip_address=`ifconfig | grep inet | awk {'print $2'} | tr '\n' ' '`
-    local output=$(check_ip $ip_address)
+    local output=$(validate_ip $ip_address)
     echo $output
 }
 
