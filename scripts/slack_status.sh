@@ -23,18 +23,23 @@ function validate_ip {
 
 
 function get_ip {
-    local ip_address=`ifconfig | grep inet | awk {'print $2'} | tr '\n' ' '`
-    local output=$(validate_ip $ip_address)
+    local ip_address
+    ip_address=$(ifconfig | grep inet | awk '{print $2}' | tr '\n' ' ')
+    local output
+    output=$(validate_ip $ip_address)
     echo $output
 }
 
 function get_hostname {
-    local output=$(hostname)
+    local output
+    output=$(hostname)
     echo $output
 }
 function post_slack {
-    local ip=$(get_ip)
-    local hostname=$(get_hostname)
+    local ip
+    ip=$(get_ip)
+    local hostname
+    hostname=$(get_hostname)
     local slack_url="https://hooks.slack.com/services/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"
     local payload="{\"text\":\"$hostname :: $ip\"}"
     curl -X POST -H "Content-type: application/json" --data "$payload" $slack_url
