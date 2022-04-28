@@ -1,5 +1,6 @@
 #!/bin/sh
 
+#TODO this file needs to be converted to python to run on windows and mac
 workout_list=$(pwd)/Desktop/auto-core/workouts
 
 function lets_workout {
